@@ -8,7 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.Locale;
 
 /**
@@ -24,6 +23,10 @@ public final class GameActivity extends Activity {
      */
     private GridLayout field;
     /**
+     * A mole image view.
+     */
+    private ImageView mole;
+    /**
      * Player's high score.
      */
     private static int highScore = 0;
@@ -36,13 +39,9 @@ public final class GameActivity extends Activity {
      */
     private static CountDownTimer timer;
     /**
-     * The game field size.
+     * A mole's counting down timer.
      */
-    private static final int FIELD_SIZE = 9;
-    /**
-     * The game field holes.
-     */
-    private static final ImageView[] HOLES = new ImageView[FIELD_SIZE];
+    private static CountDownTimer moleTimer;
 
     /**
      * Creates the game activity.
@@ -61,6 +60,7 @@ public final class GameActivity extends Activity {
         highScore = getIntent().getExtras().getInt("HIGH_SCORE");
 
         setField();
+        setMole();
         startTimer();
     }
 
@@ -90,15 +90,50 @@ public final class GameActivity extends Activity {
                 FrameLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(18, 18, 18, 18);
 
-        for (int index = 0; index < FIELD_SIZE; index++) {
+        for (int index = 0; index < 9; index++) {
             imageView = new ImageView(this);
 
             imageView.setImageDrawable(getDrawable(R.drawable.hole));
             imageView.setLayoutParams(layoutParams);
             field.addView(imageView);
-
-            HOLES[index] = imageView;
         }
+    }
+
+    /**
+     * Sets an image view and on click listener for {@code mole}.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
+    private void setMole() {
+        setMoleTimer();
+
+        mole = new ImageView(this);
+
+        mole.setImageDrawable(getDrawable(R.drawable.mole));
+        mole.setOnClickListener(view -> {
+            moveMole();
+
+            moles++;
+
+            ((TextView) findViewById(R.id.score)).setText(String.valueOf(moles));
+        });
+        moveMole();
+    }
+
+    /**
+     * Removes {@code mole} from {@code field} cell, randomly sets {@code mole} onto another
+     * {@code field} and restarts {@code moleTimer}.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
+    private void moveMole() {
+        field.removeView(mole);
+        moleTimer.cancel();
+        field.addView(mole, new GridLayout.LayoutParams(GridLayout.spec((int) (Math.random() * 3),
+                GridLayout.CENTER), GridLayout.spec((int) (Math.random() * 3), GridLayout.CENTER)));
+        moleTimer.start();
     }
 
     /**
@@ -109,7 +144,27 @@ public final class GameActivity extends Activity {
      */
     private void showResult() {
         final Intent resultActivity = new Intent(this, ResultActivity.class);
+
+        resultActivity.putExtra("HIGH_SCORE", highScore);
         startActivity(resultActivity.putExtra("MOLES", moles));
+    }
+
+    /**
+     * Sets a mole timer to move the mole across holes.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
+    private void setMoleTimer() {
+        moleTimer = new CountDownTimer(500, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {}
+
+            @Override
+            public void onFinish() {
+                moveMole();
+            }
+        };
     }
 
     /**

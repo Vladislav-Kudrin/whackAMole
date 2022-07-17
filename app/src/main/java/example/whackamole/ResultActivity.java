@@ -3,6 +3,7 @@ package example.whackamole;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * Runs a result activity.
@@ -16,6 +17,10 @@ public final class ResultActivity extends Activity {
      * Player's current score.
      */
     private static int moles;
+    /**
+     * Player's high score.
+     */
+    private static int highScore;
 
     /**
      * Creates a result activity.
@@ -31,6 +36,8 @@ public final class ResultActivity extends Activity {
         setContentView(R.layout.activity_result);
 
         moles = getIntent().getExtras().getInt("MOLES");
+        highScore = getIntent().getExtras().getInt("HIGH_SCORE");
+        ((TextView) findViewById(R.id.score)).setText(String.valueOf(moles));
     }
 
     /**

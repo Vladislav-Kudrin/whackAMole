@@ -10,5 +10,6 @@
     <string name="play_again">Play again</string>
     <string name="menu">Menu</string>
     <string name="timer_over">0s</string>
+    <string name="rules_briefing">Tap as many moles as you can and get scores.</string>
 
 </resources>

@@ -2,9 +2,13 @@ package example.whackamole;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.Locale;
 
 /**
  * Runs the game activity.
@@ -18,6 +22,10 @@ public final class GameActivity extends Activity {
      * The game field view.
      */
     private GridLayout field;
+    /**
+     * Player's high score.
+     */
+    private static int highScore;
     /**
      * The game field size.
      */
@@ -41,8 +49,10 @@ public final class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         field = findViewById(R.id.field);
+        highScore = getIntent().getExtras().getInt("HIGH_SCORE");
 
         setField();
+        startTimer();
     }
 
     /**
@@ -79,5 +89,45 @@ public final class GameActivity extends Activity {
 
             HOLES[index] = imageView;
         }
+    }
+
+    /**
+     * Starts a counting down timer for 30 seconds.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
+    private void startTimer() {
+        new CountDownTimer(30000, 1000) {
+            /**
+             * A remaining time text view.
+             */
+            private final TextView time = findViewById(R.id.time);
+
+            /**
+             * Updates a current remaining time every second.
+             *
+             * @param millisUntilFinished the current remaining time.
+             *
+             * @author Vladislav
+             * @since 1.0
+             */
+            public void onTick(long millisUntilFinished) {
+                final int second = 1000;
+
+                time.setText(String.format(Locale.getDefault(),
+                        "%ds", millisUntilFinished / second));
+            }
+
+            /**
+             * Starts a game activity's finishing.
+             *
+             * @author Vladislav
+             * @since 1.0
+             */
+            public void onFinish() {
+                onBackPressed();
+            }
+        }.start();
     }
 }

@@ -14,6 +14,11 @@ import android.view.View;
  */
 public final class MainActivity extends Activity {
     /**
+     * A player's high score.
+     */
+    private static int highScore = 0;
+
+    /**
      * Creates the main menu application activity.
      *
      * @param savedInstanceState saved user's data.
@@ -36,7 +41,8 @@ public final class MainActivity extends Activity {
      * @since 1.0
      */
     public final void onClickPlayButton(View view) {
-        startActivity(new Intent(this, GameActivity.class));
+        final Intent gameActivity = new Intent(this, GameActivity.class);
+        startActivity(gameActivity.putExtra("HIGH_SCORE", highScore));
         overridePendingTransition(0, 0);
     }
 }

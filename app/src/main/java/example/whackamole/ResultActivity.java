@@ -37,8 +37,12 @@ public final class ResultActivity extends Activity {
 
         highScore = getIntent().getExtras().getInt(KeysStorage.HIGH_SCORE);
 
-        if (highScore > moles)
-            ((TextView) findViewById(R.id.score)).setText(String.valueOf(moles));
+        if (highScore > moles) {
+            ((TextView) findViewById(R.id.score)).setText(getString(R.string.moles)
+                    .concat(String.valueOf(moles)));
+            ((TextView) findViewById(R.id.highScore)).setText(getString(R.string.high_score)
+                    .concat(String.valueOf(highScore)));
+        }
         else {
             highScore = moles;
 

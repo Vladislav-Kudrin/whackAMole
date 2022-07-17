@@ -8,18 +8,6 @@
     android:padding="8dp"
     tools:context=".ResultActivity" >
 
-    <TextView
-        android:id="@+id/score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/buttonsFrame"
-        android:layout_centerHorizontal="true"
-        android:fontFamily="monospace"
-        android:text="@string/initial_score"
-        android:textColor="@color/white"
-        android:textSize="32sp"
-        android:textStyle="bold" />
-
     <FrameLayout
         android:id="@+id/buttonsFrame"
         android:layout_width="wrap_content"
@@ -54,5 +42,27 @@
             android:onClick="onClickMenuButton" />
 
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/highScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/buttonsFrame"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="monospace"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/highScore"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="monospace"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

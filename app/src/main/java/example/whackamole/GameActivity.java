@@ -1,6 +1,7 @@
 package example.whackamole;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.FrameLayout;
@@ -25,7 +26,15 @@ public final class GameActivity extends Activity {
     /**
      * Player's high score.
      */
-    private static int highScore;
+    private static int highScore = 0;
+    /**
+     * Player's current score.
+     */
+    private static int moles = 0;
+    /**
+     * A counting down timer.
+     */
+    private static CountDownTimer timer;
     /**
      * The game field size.
      */
@@ -63,6 +72,7 @@ public final class GameActivity extends Activity {
      */
     @Override
     public final void onBackPressed() {
+        timer.cancel();
         finish();
         overridePendingTransition(0, 0);
     }
@@ -92,13 +102,24 @@ public final class GameActivity extends Activity {
     }
 
     /**
+     * Runs a result activity.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
+    private void showResult() {
+        final Intent resultActivity = new Intent(this, ResultActivity.class);
+        startActivity(resultActivity.putExtra("MOLES", moles));
+    }
+
+    /**
      * Starts a counting down timer for 30 seconds.
      *
      * @author Vladislav
      * @since 1.0
      */
     private void startTimer() {
-        new CountDownTimer(30000, 1000) {
+        timer = new CountDownTimer(30000, 1000) {
             /**
              * A remaining time text view.
              */
@@ -120,13 +141,14 @@ public final class GameActivity extends Activity {
             }
 
             /**
-             * Starts a game activity's finishing.
+             * Starts a result activity's running.
              *
              * @author Vladislav
              * @since 1.0
              */
             public void onFinish() {
-                onBackPressed();
+                time.setText(getResources().getString(R.string.timer_over));
+                showResult();
             }
         }.start();
     }

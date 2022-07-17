@@ -1,9 +1,12 @@
 package example.whackamole;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 /**
  * Runs a result activity.
@@ -14,13 +17,9 @@ import android.widget.TextView;
  */
 public final class ResultActivity extends Activity {
     /**
-     * Player's current score.
-     */
-    private static int moles;
-    /**
      * Player's high score.
      */
-    private static int highScore;
+    private int highScore;
 
     /**
      * Creates a result activity.
@@ -35,9 +34,18 @@ public final class ResultActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        moles = getIntent().getExtras().getInt("MOLES");
+        final int moles = getIntent().getExtras().getInt("MOLES");
+
         highScore = getIntent().getExtras().getInt("HIGH_SCORE");
-        ((TextView) findViewById(R.id.score)).setText(String.valueOf(moles));
+
+        if (highScore > moles)
+            ((TextView) findViewById(R.id.score)).setText(String.valueOf(moles));
+        else {
+            highScore = moles;
+
+            ((TextView) findViewById(R.id.score)).setText(String.format(Locale.getDefault(),
+                    "New High Score: %d", highScore));
+        }
     }
 
     /**
@@ -48,14 +56,26 @@ public final class ResultActivity extends Activity {
      */
     @Override
     public final void onBackPressed() {
+        onClickMenuButton(this.getCurrentFocus());
+    }
+
+    /**
+     * Destroys current activity and returns to the game activity.
+     *
+     * @param view a user's interface component.
+     */
+    public final void onClickPlayAgainButton(View view) {
+        setResult(Activity.RESULT_OK, new Intent().putExtra("HIGH_SCORE", highScore));
         finish();
     }
 
-    public final void onClickPlayAgainButton(View view) {
-        onBackPressed();
-    }
-
+    /**
+     * Destroys current activity and returns to the main activity.
+     *
+     * @param view a user's interface component.
+     */
     public final void onClickMenuButton(View view) {
-        onBackPressed();
+        setResult(Activity.RESULT_CANCELED);
+        finish();
     }
 }

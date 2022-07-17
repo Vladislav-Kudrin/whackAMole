@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/grass</item>
         <item name="colorPrimaryVariant">@color/sky</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
     </style>

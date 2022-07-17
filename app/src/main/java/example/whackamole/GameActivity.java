@@ -8,6 +8,9 @@ import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
 /**
@@ -17,7 +20,23 @@ import java.util.Locale;
  * @version 1.0
  * @since 1.0
  */
-public final class GameActivity extends Activity {
+public final class GameActivity extends AppCompatActivity {
+    /**
+     * Player's high score.
+     */
+    private int highScore;
+    /**
+     * An activity result launcher to get a result activity's callback.
+     */
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+    /**
+     * A counting down timer.
+     */
+    private CountDownTimer timer;
+    /**
+     * A mole's counting down timer.
+     */
+    private CountDownTimer moleTimer;
     /**
      * The game field view.
      */
@@ -27,21 +46,17 @@ public final class GameActivity extends Activity {
      */
     private ImageView mole;
     /**
-     * Player's high score.
+     * A current player's score text view.
      */
-    private static int highScore = 0;
+    private TextView score;
     /**
      * Player's current score.
      */
-    private static int moles = 0;
+    private int moles = 0;
     /**
-     * A counting down timer.
+     * A bundle's high score key.
      */
-    private static CountDownTimer timer;
-    /**
-     * A mole's counting down timer.
-     */
-    private static CountDownTimer moleTimer;
+    private static final String HIGH_SCORE = "HIGH_SCORE";
 
     /**
      * Creates the game activity.
@@ -57,7 +72,23 @@ public final class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         field = findViewById(R.id.field);
-        highScore = getIntent().getExtras().getInt("HIGH_SCORE");
+        score = findViewById(R.id.score);
+        highScore = getIntent().getExtras().getInt(HIGH_SCORE);
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    final Intent intent = result.getData();
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        if (intent != null)
+                            highScore = intent.getExtras().getInt(HIGH_SCORE);
+                        moles = 0;
+
+                        score.setText(getString(R.string.initial_score));
+                        moveMole();
+                        timer.start();
+                    } else
+                        onBackPressed();
+                });
 
         setField();
         setMole();
@@ -116,7 +147,7 @@ public final class GameActivity extends Activity {
 
             moles++;
 
-            ((TextView) findViewById(R.id.score)).setText(String.valueOf(moles));
+            score.setText(String.valueOf(moles));
         });
         moveMole();
     }
@@ -145,8 +176,10 @@ public final class GameActivity extends Activity {
     private void showResult() {
         final Intent resultActivity = new Intent(this, ResultActivity.class);
 
-        resultActivity.putExtra("HIGH_SCORE", highScore);
-        startActivity(resultActivity.putExtra("MOLES", moles));
+        resultActivity.putExtra(HIGH_SCORE, highScore);
+        activityResultLauncher.launch(resultActivity.putExtra("MOLES", moles));
+        field.removeView(mole);
+        moleTimer.cancel();
     }
 
     /**
@@ -157,9 +190,23 @@ public final class GameActivity extends Activity {
      */
     private void setMoleTimer() {
         moleTimer = new CountDownTimer(500, 500) {
+            /**
+             * Performs some actions on a regular interval.
+             *
+             * @param millisUntilFinished a current remaining time.
+             *
+             * @author Vladislav
+             * @since 1.0
+             */
             @Override
             public void onTick(long millisUntilFinished) {}
 
+            /**
+             * Moves a mole randomly across the game field holes.
+             *
+             * @author Vladislav
+             * @since 1.0
+             */
             @Override
             public void onFinish() {
                 moveMole();

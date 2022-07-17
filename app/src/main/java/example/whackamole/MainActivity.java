@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * Runs the main menu application activity.
@@ -17,6 +18,14 @@ public final class MainActivity extends Activity {
      * A player's high score.
      */
     private static int highScore = 0;
+    /**
+     * A player's high score text view.
+     */
+    private TextView score;
+    /**
+     * A shared preferences' handler instance.
+     */
+    private static PreferenceHandler preferenceHandler;
 
     /**
      * Creates the main menu application activity.
@@ -30,6 +39,20 @@ public final class MainActivity extends Activity {
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        score = findViewById(R.id.score);
+        preferenceHandler = new PreferenceHandler(this);
+        highScore = preferenceHandler.getHighScore();
+
+        score.setText(String.valueOf(highScore));
+    }
+
+    @Override
+    public final void onResume() {
+        highScore = preferenceHandler.getHighScore();
+
+        score.setText(String.valueOf(highScore));
+        super.onResume();
     }
 
     /**
@@ -42,7 +65,7 @@ public final class MainActivity extends Activity {
      */
     public final void onClickPlayButton(View view) {
         final Intent gameActivity = new Intent(this, GameActivity.class);
-        startActivity(gameActivity.putExtra("HIGH_SCORE", highScore));
+        startActivity(gameActivity.putExtra(KeysStorage.HIGH_SCORE, highScore));
         overridePendingTransition(0, 0);
     }
 }

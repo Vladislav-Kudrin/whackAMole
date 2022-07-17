@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import java.util.Locale;
 
 /**
@@ -34,15 +33,16 @@ public final class ResultActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
-        final int moles = getIntent().getExtras().getInt("MOLES");
+        final int moles = getIntent().getExtras().getInt(KeysStorage.MOLES);
 
-        highScore = getIntent().getExtras().getInt("HIGH_SCORE");
+        highScore = getIntent().getExtras().getInt(KeysStorage.HIGH_SCORE);
 
         if (highScore > moles)
             ((TextView) findViewById(R.id.score)).setText(String.valueOf(moles));
         else {
             highScore = moles;
 
+            new PreferenceHandler(this).setHighScore(highScore);
             ((TextView) findViewById(R.id.score)).setText(String.format(Locale.getDefault(),
                     "New High Score: %d", highScore));
         }
@@ -65,7 +65,7 @@ public final class ResultActivity extends Activity {
      * @param view a user's interface component.
      */
     public final void onClickPlayAgainButton(View view) {
-        setResult(Activity.RESULT_OK, new Intent().putExtra("HIGH_SCORE", highScore));
+        setResult(Activity.RESULT_OK, new Intent().putExtra(KeysStorage.HIGH_SCORE, highScore));
         finish();
     }
 

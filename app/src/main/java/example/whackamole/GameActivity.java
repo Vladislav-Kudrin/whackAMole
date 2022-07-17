@@ -53,10 +53,6 @@ public final class GameActivity extends AppCompatActivity {
      * Player's current score.
      */
     private int moles = 0;
-    /**
-     * A bundle's high score key.
-     */
-    private static final String HIGH_SCORE = "HIGH_SCORE";
 
     /**
      * Creates the game activity.
@@ -73,14 +69,14 @@ public final class GameActivity extends AppCompatActivity {
 
         field = findViewById(R.id.field);
         score = findViewById(R.id.score);
-        highScore = getIntent().getExtras().getInt(HIGH_SCORE);
+        highScore = getIntent().getExtras().getInt(KeysStorage.HIGH_SCORE);
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     final Intent intent = result.getData();
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         if (intent != null)
-                            highScore = intent.getExtras().getInt(HIGH_SCORE);
+                            highScore = intent.getExtras().getInt(KeysStorage.HIGH_SCORE);
                         moles = 0;
 
                         score.setText(getString(R.string.initial_score));
@@ -176,7 +172,7 @@ public final class GameActivity extends AppCompatActivity {
     private void showResult() {
         final Intent resultActivity = new Intent(this, ResultActivity.class);
 
-        resultActivity.putExtra(HIGH_SCORE, highScore);
+        resultActivity.putExtra(KeysStorage.HIGH_SCORE, highScore);
         activityResultLauncher.launch(resultActivity.putExtra("MOLES", moles));
         field.removeView(mole);
         moleTimer.cancel();

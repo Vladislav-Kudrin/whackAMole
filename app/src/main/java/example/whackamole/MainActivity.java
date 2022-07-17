@@ -28,7 +28,7 @@ public final class MainActivity extends Activity {
     }
 
     /**
-     * Runs the game activity.
+     * Runs the game activity with no pending transitions.
      *
      * @param view a user interface component.
      *

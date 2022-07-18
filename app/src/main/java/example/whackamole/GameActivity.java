@@ -8,9 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import example.whackamole.entities.Mole;
 import java.util.Locale;
 
@@ -21,15 +18,7 @@ import java.util.Locale;
  * @version 1.0
  * @since 1.0
  */
-public final class GameActivity extends AppCompatActivity {
-    /**
-     * Player's high score.
-     */
-    private int highScore;
-    /**
-     * An activity result launcher to get a result activity's callback.
-     */
-    private ActivityResultLauncher<Intent> activityResultLauncher;
+public final class GameActivity extends Activity {
     /**
      * A counting down timer.
      */
@@ -43,9 +32,13 @@ public final class GameActivity extends AppCompatActivity {
      */
     private Mole mole;
     /**
-     * A current player's score text view.
+     * A shared preferences' handler instance.
      */
-    private TextView score;
+    private PreferencesHandler preferencesHandler;
+    /**
+     * The game activity's a resumed flag.
+     */
+    private boolean isResumed = false;
 
     /**
      * Creates the game activity.
@@ -60,27 +53,37 @@ public final class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        preferencesHandler = new PreferencesHandler(this);
         field = findViewById(R.id.field);
-        score = findViewById(R.id.score);
-        mole = new Mole(this, field, score);
-        highScore = getIntent().getExtras().getInt(KeysStorage.HIGH_SCORE);
-        activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    final Intent intent = result.getData();
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        if (intent != null)
-                            highScore = intent.getExtras().getInt(KeysStorage.HIGH_SCORE);
-                        mole.resetScore();
-                        mole.moveMole();
-                        timer.start();
-                    } else
-                        onBackPressed();
-                });
+        mole = new Mole(this, field, findViewById(R.id.score));
 
         setField();
         mole.setMole();
         startTimer();
+    }
+
+    /**
+     * Resets a current player's score and restarts {@code mole} if a replay status is true,
+     * destroys the game activity otherwise.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
+    @Override
+    public final void onResume() {
+        if (isResumed) {
+            if (preferencesHandler.isReplay()) {
+                mole.resetScore();
+                mole.moveMole();
+                timer.start();
+            } else {
+                preferencesHandler.setReplay(true);
+                onBackPressed();
+            }
+        } else
+            isResumed = true;
+
+        super.onResume();
     }
 
     /**
@@ -127,9 +130,7 @@ public final class GameActivity extends AppCompatActivity {
     private void showResult() {
         final Intent resultActivity = new Intent(this, ResultActivity.class);
 
-        resultActivity.putExtra(KeysStorage.HIGH_SCORE, highScore);
-        activityResultLauncher.launch(resultActivity.putExtra(KeysStorage.MOLES,
-                Integer.valueOf(score.getText().toString())));
+        startActivity(resultActivity.putExtra(KeysStorage.MOLES, mole.getHits()));
         mole.stopMole();
     }
 

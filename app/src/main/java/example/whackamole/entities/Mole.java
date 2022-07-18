@@ -7,6 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import example.whackamole.R;
 
+/**
+ * Handles a mole entity's methods.
+ *
+ * @author Vladislav
+ * @version 1.0
+ * @since 1.0
+ */
 public final class Mole {
     /**
      * The game activity's context.
@@ -136,5 +143,14 @@ public final class Mole {
         hits = 0;
 
         score.setText(String.valueOf(hits));
+    }
+
+    /**
+     * Returns a current player's score.
+     *
+     * @return the current player's score.
+     */
+    public final int getHits() {
+        return hits;
     }
 }

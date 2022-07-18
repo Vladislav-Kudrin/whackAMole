@@ -1,7 +1,6 @@
 package example.whackamole;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -16,9 +15,9 @@ import java.util.Locale;
  */
 public final class ResultActivity extends Activity {
     /**
-     * Player's high score.
+     * A shared preferences' handler instance.
      */
-    private int highScore;
+    private PreferencesHandler preferencesHandler;
 
     /**
      * Creates a result activity.
@@ -33,9 +32,11 @@ public final class ResultActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        int highScore;
         final int moles = getIntent().getExtras().getInt(KeysStorage.MOLES);
 
-        highScore = getIntent().getExtras().getInt(KeysStorage.HIGH_SCORE);
+        preferencesHandler = new PreferencesHandler(this);
+        highScore = preferencesHandler.getHighScore();
 
         if (highScore > moles) {
             ((TextView) findViewById(R.id.score)).setText(getString(R.string.moles)
@@ -46,7 +47,7 @@ public final class ResultActivity extends Activity {
         else {
             highScore = moles;
 
-            new PreferencesHandler(this).setHighScore(highScore);
+            preferencesHandler.setHighScore(highScore);
             ((TextView) findViewById(R.id.score)).setText(String.format(Locale.getDefault(),
                     "New High Score: %d", highScore));
         }
@@ -69,7 +70,6 @@ public final class ResultActivity extends Activity {
      * @param view a user's interface component.
      */
     public final void onClickPlayAgainButton(View view) {
-        setResult(Activity.RESULT_OK, new Intent().putExtra(KeysStorage.HIGH_SCORE, highScore));
         finish();
     }
 
@@ -79,7 +79,7 @@ public final class ResultActivity extends Activity {
      * @param view a user's interface component.
      */
     public final void onClickMenuButton(View view) {
-        setResult(Activity.RESULT_CANCELED);
+        preferencesHandler.setReplay(false);
         finish();
     }
 }

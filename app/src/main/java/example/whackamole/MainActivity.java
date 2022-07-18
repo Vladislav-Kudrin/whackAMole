@@ -47,6 +47,12 @@ public final class MainActivity extends Activity {
         score.setText(String.valueOf(highScore));
     }
 
+    /**
+     * Refreshes a player's high score value.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
     @Override
     public final void onResume() {
         highScore = preferencesHandler.getHighScore();

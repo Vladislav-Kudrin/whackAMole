@@ -20,4 +20,8 @@ final class KeysStorage {
      * An application preferences' file name.
      */
     static final String APP_PREFERENCES = "appPreferences";
+    /**
+     * A replay status preferences key.
+     */
+    static final String REPLAY = "replay";
 }

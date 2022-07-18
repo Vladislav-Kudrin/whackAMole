@@ -22,9 +22,9 @@ final class PreferencesHandler {
     private static SharedPreferences preferences;
 
     /**
-     * Creates a new shared preference handler with an instantiator activity context.
+     * Creates a new shared preference handler with an instantiator activity's context.
      *
-     * @param context the instantiator activity context.
+     * @param context the instantiator activity's context.
      *
      * @author Vladislav
      * @since 1.0
@@ -38,9 +38,9 @@ final class PreferencesHandler {
     }
 
     /**
-     * Sets or updates a value of a high score preference key.
+     * Sets or updates a value of a high score's preference key.
      *
-     * @param highScore the value of the high score preference key.
+     * @param highScore the value of the high score's preference key.
      *
      * @author Vladislav
      * @since 1.0
@@ -51,12 +51,35 @@ final class PreferencesHandler {
     }
 
     /**
-     * Gets a a value of a high score preference key if the key exists. If the key doesn't exist
+     * Gets a value of a high score's preference key if the key exists. If the key doesn't exist
      * returns 0.
      *
-     * @return the value of the high score preference key.
+     * @return the value of the high score's preference key.
      */
     public final int getHighScore() {
         return preferences.getInt(KeysStorage.HIGH_SCORE, 0);
+    }
+
+    /**
+     * Sets or updates a value of a replay status preference key.
+     *
+     * @param isReplay the value of the replay status preference key.
+     *
+     * @author Vladislav
+     * @since 1.0
+     */
+    public final void setReplay(boolean isReplay) {
+        editor.putBoolean(KeysStorage.REPLAY, isReplay);
+        editor.apply();
+    }
+
+    /**
+     * Gets a value of a replay status preference key if the key exists. If the key doesn't exist
+     * returns true.
+     *
+     * @return the value of the replay status preference key.
+     */
+    public final boolean isReplay() {
+        return preferences.getBoolean(KeysStorage.REPLAY, true);
     }
 }

@@ -25,7 +25,7 @@ public final class MainActivity extends Activity {
     /**
      * A shared preferences' handler instance.
      */
-    private static PreferenceHandler preferenceHandler;
+    private static PreferencesHandler preferencesHandler;
 
     /**
      * Creates the main menu application activity.
@@ -41,15 +41,15 @@ public final class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         score = findViewById(R.id.score);
-        preferenceHandler = new PreferenceHandler(this);
-        highScore = preferenceHandler.getHighScore();
+        preferencesHandler = new PreferencesHandler(this);
+        highScore = preferencesHandler.getHighScore();
 
         score.setText(String.valueOf(highScore));
     }
 
     @Override
     public final void onResume() {
-        highScore = preferenceHandler.getHighScore();
+        highScore = preferencesHandler.getHighScore();
 
         score.setText(String.valueOf(highScore));
         super.onResume();

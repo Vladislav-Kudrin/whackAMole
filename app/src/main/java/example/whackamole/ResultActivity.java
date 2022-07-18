@@ -46,7 +46,7 @@ public final class ResultActivity extends Activity {
         else {
             highScore = moles;
 
-            new PreferenceHandler(this).setHighScore(highScore);
+            new PreferencesHandler(this).setHighScore(highScore);
             ((TextView) findViewById(R.id.score)).setText(String.format(Locale.getDefault(),
                     "New High Score: %d", highScore));
         }

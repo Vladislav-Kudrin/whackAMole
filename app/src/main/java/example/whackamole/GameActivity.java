@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import example.whackamole.entities.Mole;
 import java.util.Locale;
 
 /**
@@ -34,25 +35,17 @@ public final class GameActivity extends AppCompatActivity {
      */
     private CountDownTimer timer;
     /**
-     * A mole's counting down timer.
-     */
-    private CountDownTimer moleTimer;
-    /**
-     * The game field view.
+     * The game field grid layout.
      */
     private GridLayout field;
     /**
-     * A mole image view.
+     * A mole entity instance.
      */
-    private ImageView mole;
+    private Mole mole;
     /**
      * A current player's score text view.
      */
     private TextView score;
-    /**
-     * Player's current score.
-     */
-    private int moles = 0;
 
     /**
      * Creates the game activity.
@@ -69,6 +62,7 @@ public final class GameActivity extends AppCompatActivity {
 
         field = findViewById(R.id.field);
         score = findViewById(R.id.score);
+        mole = new Mole(this, field, score);
         highScore = getIntent().getExtras().getInt(KeysStorage.HIGH_SCORE);
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -77,17 +71,15 @@ public final class GameActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         if (intent != null)
                             highScore = intent.getExtras().getInt(KeysStorage.HIGH_SCORE);
-                        moles = 0;
-
-                        score.setText(getString(R.string.initial_score));
-                        moveMole();
+                        mole.resetScore();
+                        mole.moveMole();
                         timer.start();
                     } else
                         onBackPressed();
                 });
 
         setField();
-        setMole();
+        mole.setMole();
         startTimer();
     }
 
@@ -127,43 +119,6 @@ public final class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets an image view and on click listener for {@code mole}.
-     *
-     * @author Vladislav
-     * @since 1.0
-     */
-    private void setMole() {
-        setMoleTimer();
-
-        mole = new ImageView(this);
-
-        mole.setImageDrawable(getDrawable(R.drawable.mole));
-        mole.setOnClickListener(view -> {
-            moveMole();
-
-            moles++;
-
-            score.setText(String.valueOf(moles));
-        });
-        moveMole();
-    }
-
-    /**
-     * Removes {@code mole} from {@code field} cell, randomly sets {@code mole} onto another
-     * {@code field} and restarts {@code moleTimer}.
-     *
-     * @author Vladislav
-     * @since 1.0
-     */
-    private void moveMole() {
-        field.removeView(mole);
-        moleTimer.cancel();
-        field.addView(mole, new GridLayout.LayoutParams(GridLayout.spec((int) (Math.random() * 3),
-                GridLayout.CENTER), GridLayout.spec((int) (Math.random() * 3), GridLayout.CENTER)));
-        moleTimer.start();
-    }
-
-    /**
      * Runs a result activity.
      *
      * @author Vladislav
@@ -173,41 +128,9 @@ public final class GameActivity extends AppCompatActivity {
         final Intent resultActivity = new Intent(this, ResultActivity.class);
 
         resultActivity.putExtra(KeysStorage.HIGH_SCORE, highScore);
-        activityResultLauncher.launch(resultActivity.putExtra("MOLES", moles));
-        field.removeView(mole);
-        moleTimer.cancel();
-    }
-
-    /**
-     * Sets a mole timer to move the mole across holes.
-     *
-     * @author Vladislav
-     * @since 1.0
-     */
-    private void setMoleTimer() {
-        moleTimer = new CountDownTimer(500, 500) {
-            /**
-             * Performs some actions on a regular interval.
-             *
-             * @param millisUntilFinished a current remaining time.
-             *
-             * @author Vladislav
-             * @since 1.0
-             */
-            @Override
-            public void onTick(long millisUntilFinished) {}
-
-            /**
-             * Moves a mole randomly across the game field holes.
-             *
-             * @author Vladislav
-             * @since 1.0
-             */
-            @Override
-            public void onFinish() {
-                moveMole();
-            }
-        };
+        activityResultLauncher.launch(resultActivity.putExtra(KeysStorage.MOLES,
+                Integer.valueOf(score.getText().toString())));
+        mole.stopMole();
     }
 
     /**

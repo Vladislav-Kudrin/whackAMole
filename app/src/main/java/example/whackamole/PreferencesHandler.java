@@ -10,9 +10,16 @@ import android.content.SharedPreferences;
  * @version 1.0
  * @since 1.0
  */
-final class PreferenceHandler {
-    private static SharedPreferences preferences;
+final class PreferencesHandler {
+    /**
+     * An application shared preferences' editor.
+     */
     private static SharedPreferences.Editor editor;
+
+    /**
+     * An application shared preferences.
+     */
+    private static SharedPreferences preferences;
 
     /**
      * Creates a new shared preference handler with an instantiator activity context.
@@ -22,7 +29,7 @@ final class PreferenceHandler {
      * @author Vladislav
      * @since 1.0
      */
-    public PreferenceHandler(Context context) {
+    public PreferencesHandler(Context context) {
         preferences = context.getSharedPreferences(KeysStorage.APP_PREFERENCES,
                 Context.MODE_PRIVATE);
         editor = preferences.edit();

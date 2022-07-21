@@ -3,7 +3,7 @@
 
 # <a name="en"></a>Description
 
-Whack a Mole is a simple Android 5 game where you have to tap came out moles to get scores. More hits on the mole, higher the game score.
+Whack a Mole is a simple Android 5 game where you have to tap came out moles for 30 seconds to get scores. More hits on the mole, higher the game score.
 
 # Installation
 
@@ -14,13 +14,13 @@ Whack a Mole is a simple Android 5 game where you have to tap came out moles to 
 3. Download `whackAMole.apk` file;
 4. Install downloaded file on your Android.
 
-Latest release version: [Release v1.0](https://github.com/Vladislav-Kudrin/whackAMole/releases/tag/v1.0)
+Latest release version: [Release v1.0.1](https://github.com/Vladislav-Kudrin/whackAMole/releases/tag/v1.0.1)
 
-Download latest release: [whackAMole.apk](https://github.com/Vladislav-Kudrin/whackAMole/releases/download/v1.0/whackAMole.apk)
+Download latest release: [whackAMole.apk](https://github.com/Vladislav-Kudrin/whackAMole/releases/download/v1.0.1/whackAMole.apk)
 
 # <a name="ru"></a>Описание
 
-Whack a Mole простая игра для Android 5, где необходимо нажимать по выныривающему кроту для получения очков. Чем больше попаданий по кроту, тем выше игровой счёт.
+Whack a Mole простая игра для Android 5, где в течение 30 секунд необходимо нажимать по выныривающему кроту для получения очков. Чем больше попаданий по кроту, тем выше игровой счёт.
 
 # Установка
 
@@ -31,6 +31,6 @@ Whack a Mole простая игра для Android 5, где необходим
 3. Загрузите файл `whackAMole.apk`;
 4. Установите загруженный файл на Ваш Android.
 
-Последняя релизная версия: [Release v1.0](https://github.com/Vladislav-Kudrin/whackAMole/releases/tag/v1.0)
+Последняя релизная версия: [Release v1.0.1](https://github.com/Vladislav-Kudrin/whackAMole/releases/tag/v1.0.1)
 
-Скачать последний релиз: [whackAMole.apk](https://github.com/Vladislav-Kudrin/whackAMole/releases/download/v1.0/whackAMole.apk)
+Скачать последний релиз: [whackAMole.apk](https://github.com/Vladislav-Kudrin/whackAMole/releases/download/v1.0.1/whackAMole.apk)

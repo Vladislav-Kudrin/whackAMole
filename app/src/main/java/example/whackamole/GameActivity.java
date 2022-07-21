@@ -36,6 +36,10 @@ public final class GameActivity extends Activity {
      */
     private PreferencesHandler preferencesHandler;
     /**
+     * A current player's score text view.
+     */
+    private TextView score;
+    /**
      * The game activity's a resumed flag.
      */
     private boolean isResumed = false;
@@ -54,8 +58,9 @@ public final class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         preferencesHandler = new PreferencesHandler(this);
+        score = findViewById(R.id.score);
         field = findViewById(R.id.field);
-        mole = new Mole(this, field, findViewById(R.id.score));
+        mole = new Mole(this, field, score);
 
         setField();
         mole.setMole();
@@ -72,8 +77,10 @@ public final class GameActivity extends Activity {
     @Override
     public final void onResume() {
         if (isResumed) {
+            Mole.resetScore();
+            score.setText(getString(R.string.initial_score));
+
             if (preferencesHandler.isReplay()) {
-                mole.resetScore();
                 mole.moveMole();
                 timer.start();
             } else {
@@ -130,7 +137,7 @@ public final class GameActivity extends Activity {
     private void showResult() {
         final Intent resultActivity = new Intent(this, ResultActivity.class);
 
-        startActivity(resultActivity.putExtra(KeysStorage.MOLES, mole.getHits()));
+        startActivity(resultActivity.putExtra(KeysStorage.MOLES, Mole.getHits()));
         mole.stopMole();
     }
 

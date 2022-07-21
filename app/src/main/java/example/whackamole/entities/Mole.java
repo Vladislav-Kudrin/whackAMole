@@ -139,10 +139,8 @@ public final class Mole {
     /**
      * Resets {@code hits} and {@code score} values to 0.
      */
-    public final void resetScore() {
+    public static void resetScore() {
         hits = 0;
-
-        score.setText(String.valueOf(hits));
     }
 
     /**
@@ -150,7 +148,7 @@ public final class Mole {
      *
      * @return the current player's score.
      */
-    public final int getHits() {
+    public static int getHits() {
         return hits;
     }
 }
